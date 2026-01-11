@@ -6,6 +6,16 @@ Give any LLM its own display.
 npx brain-canvas
 ```
 
+## The Numbers
+
+| What | Count |
+|------|-------|
+| Lines of code | 191 |
+| Dependencies | 0 |
+| Package size | 6.9 KB |
+| Section types | 10 |
+| Time to install | 3 seconds |
+
 ## What is this?
 
 A live HTML canvas that any LLM can control. Send JSON, get beautiful interactive UI.
