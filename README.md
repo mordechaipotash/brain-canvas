@@ -12,15 +12,17 @@ npx brain-canvas
 
 | What | Count |
 |------|-------|
-| Lines of code | 191 |
+| Lines of code | 220 |
 | Dependencies | 0 |
-| Package size | 6.9 KB |
+| Package size | 13 KB |
 | Section types | 10 |
 | Time to install | 3 seconds |
 
 ## What is this?
 
 A live HTML canvas that any LLM can control. Send JSON, get beautiful interactive UI.
+
+**Design:** shadcn-inspired dark theme with CSS custom properties, subtle shadows, and buttery transitions.
 
 **The loop:**
 ```
