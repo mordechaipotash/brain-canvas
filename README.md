@@ -163,6 +163,12 @@ The LLM generates the interface at runtime. No pre-built templates. Infinite pos
 - **Beautiful** - Dark theme, smooth animations
 - **Keyboard shortcuts** - Press 1-9 to select choices
 
+## Origin Story
+
+Built while creating [intellectual-dna](https://github.com/mordechaipotash/intellectual-dna), a personal knowledge system for querying 353K AI conversations.
+
+The thesis: LLMs can generate beautiful interfaces at runtime. Ship seeds, not templates.
+
 ## License
 
 MIT
