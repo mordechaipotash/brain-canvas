@@ -8,97 +8,89 @@ Render structured content to a live browser canvas and receive user choices.
 /canvas <content-description>
 ```
 
-## What This Skill Does
+## CRITICAL: Always Poll After Rendering
 
-1. Ensures brain-canvas server is running on port 3333
-2. Sends structured JSON to render in the browser
-3. Polls for user choice (auto-waits up to 60 seconds)
-4. Returns the selected choice to the conversation
+**After EVERY render, you MUST poll for the user's choice.** Do not wait for the user to tell you they clicked - poll immediately and wait.
 
 ## Instructions for Claude
 
-When this skill is invoked:
+### Step 1: Render Content
 
-### Step 1: Check/Start Server
+Send a POST to `/update`:
 
 ```bash
-# Check if server is running
-curl -s http://localhost:3333/v 2>/dev/null || (cd /Users/mordechai/brain-canvas && node bin/cli.js &)
-sleep 1
+curl -s -X POST http://localhost:3333/update \
+  -H "Content-Type: application/json" \
+  -d '{"title": "...", "sections": [...]}'
 ```
 
-### Step 2: Render Content
+### Step 2: IMMEDIATELY Poll for Choice
 
-Send a POST to `/update` with this JSON structure:
+**Right after rendering, ALWAYS run this:**
+
+```bash
+/Users/mordechai/brain-canvas/bin/wait-choice.sh 120
+```
+
+This waits up to 120 seconds for the user to click. The result will be:
+- `{"id": "option1", "label": "Option 1", "t": 1234567890}` - user clicked
+- `{"error": "timeout", ...}` - no click within timeout
+
+### Step 3: Act on the Choice
+
+Parse the JSON and continue the conversation based on what the user selected.
+
+## JSON Structure
 
 ```json
 {
+  "query": "Optional top label",
   "title": "Main Title",
   "subtitle": "Optional subtitle",
-  "query": "Optional top label",
   "sections": [
-    { "type": "text", "text": "Plain text content" },
+    { "type": "text", "text": "Plain text" },
     { "type": "header", "text": "Section Header" },
-    { "type": "quote", "text": "Quoted text", "date": "Optional date" },
-    { "type": "insight", "text": "Highlighted insight", "label": "INSIGHT" },
-    { "type": "principle", "text": "Principle text", "name": "PRINCIPLE NAME" },
-    { "type": "stats", "items": [
-      { "value": "123", "label": "Metric" }
-    ]},
-    { "type": "timeline", "title": "Timeline", "items": [
-      { "date": "2024-01", "text": "Event description" }
-    ]},
-    { "type": "comparison", "old": ["Old item 1"], "new": ["New item 1"] },
+    { "type": "quote", "text": "Quoted text", "date": "Optional" },
+    { "type": "insight", "text": "Highlighted", "label": "INSIGHT" },
+    { "type": "principle", "text": "Principle", "name": "NAME" },
+    { "type": "stats", "items": [{ "value": "123", "label": "Metric" }] },
+    { "type": "timeline", "title": "Timeline", "items": [{ "date": "2024", "text": "Event" }] },
+    { "type": "comparison", "old": ["Item 1"], "new": ["Item 1"] },
     { "type": "choices", "items": [
-      { "id": "option1", "label": "Option 1", "desc": "Description", "color": "green" },
-      { "id": "option2", "label": "Option 2", "desc": "Description", "color": "blue" }
+      { "id": "opt1", "label": "Option 1", "desc": "Description", "color": "green" }
     ]},
     { "type": "divider" }
   ]
 }
 ```
 
-**Colors for choices:** green, blue, yellow, red (or omit for default)
+**Colors:** green, blue, yellow, red
 
-### Step 3: Poll for Choice
-
-After rendering, poll `/choice` until user selects:
+## Example: Complete Flow
 
 ```bash
-# Poll every 2 seconds, max 30 attempts (60 seconds)
-for i in {1..30}; do
-  CHOICE=$(curl -s http://localhost:3333/choice)
-  if echo "$CHOICE" | grep -q '"id"'; then
-    echo "USER SELECTED: $CHOICE"
-    break
-  fi
-  sleep 2
-done
+# 1. Render
+curl -s -X POST http://localhost:3333/update -H "Content-Type: application/json" -d '{
+  "title": "Pick One",
+  "sections": [
+    { "type": "choices", "items": [
+      { "id": "a", "label": "Option A", "color": "green" },
+      { "id": "b", "label": "Option B", "color": "blue" }
+    ]}
+  ]
+}'
+
+# 2. IMMEDIATELY poll (don't skip this!)
+/Users/mordechai/brain-canvas/bin/wait-choice.sh 120
+# Returns: {"id":"a","label":"Option A","t":...}
+
+# 3. Act on choice
+# "User chose Option A, now I'll..."
 ```
 
-### Step 4: Return to Conversation
+## Checklist for Claude
 
-Parse the choice JSON and continue the conversation based on what the user selected.
-
-The response format is:
-```json
-{"id": "option1", "label": "Option 1", "t": 1234567890}
-```
-
-## Example Flow
-
-User: `/canvas Show me 3 options for dinner`
-
-Claude:
-1. Renders canvas with title "Dinner Options" and 3 choice buttons
-2. Polls `/choice` endpoint
-3. User clicks "Italian"
-4. Claude receives `{"id": "italian", "label": "Italian", "t": ...}`
-5. Claude continues: "Great choice! Here are some Italian restaurant recommendations..."
-
-## Notes
-
-- Canvas auto-opens in browser on first run
-- Page auto-refreshes when content updates (polling every 500ms)
-- Keyboard shortcuts 1-9 work for choices
-- Choice is consumed on read (one-time retrieval)
+- [ ] Rendered content with POST /update
+- [ ] **Immediately ran wait-choice.sh** (don't forget!)
+- [ ] Received choice JSON
+- [ ] Continued conversation based on choice
