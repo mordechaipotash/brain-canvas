@@ -6,7 +6,7 @@ Give any LLM its own display.
 npx brain-canvas
 ```
 
-![brain-canvas demo](demo.png)
+![brain-canvas demo](screenshot.png)
 
 ## The Numbers
 
