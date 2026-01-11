@@ -1,6 +1,6 @@
 {
   "name": "brain-canvas",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Give any LLM its own display",
   "bin": {
     "brain-canvas": "./bin/cli.js"
