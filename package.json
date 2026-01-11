@@ -1,6 +1,6 @@
 {
   "name": "brain-canvas",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Give any LLM its own display",
   "bin": {
     "brain-canvas": "./bin/cli.js"
@@ -8,7 +8,15 @@
   "scripts": {
     "start": "node bin/cli.js"
   },
-  "keywords": ["llm", "claude", "gpt", "ai", "canvas", "ui", "visualization"],
+  "keywords": [
+    "llm",
+    "claude",
+    "gpt",
+    "ai",
+    "canvas",
+    "ui",
+    "visualization"
+  ],
   "author": "Mordechai Potash",
   "license": "MIT",
   "repository": {
