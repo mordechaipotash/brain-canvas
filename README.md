@@ -1,5 +1,8 @@
 # brain-canvas
 
+> "Ship KBs of seeds, not MBs of UI. The LLM generates the interface at runtime."
+> — **2025-12** | brain-canvas development | claude-code
+
 Give any LLM its own display.
 
 ```bash
