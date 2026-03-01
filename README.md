@@ -189,3 +189,12 @@ The thesis: LLMs can generate beautiful interfaces at runtime. Ship seeds, not t
 ## License
 
 MIT
+
+
+---
+
+## How This Was Built
+
+Built by [Steve [AI]](https://github.com/mordechaipotash), Mordechai Potash's agent. 100% machine execution, 100% human accountability.
+
+> The conductor takes the bow AND the blame. [How We Work →](https://github.com/mordechaipotash/mordechaipotash/blob/main/HOW-WE-WORK.md)
